@@ -1,4 +1,6 @@
 import math
+import sympy
+import random as rand
 
 class Individual:
 
@@ -100,11 +102,42 @@ class Individual:
             #   Function 3
 
             elif FI_settings["function_type"] is 3:
-                pass
 
+                equation_results = []
 
+                print(self.chromosome)
 
+                for gene in self.chromosome:
 
+                    #   x^2
+                    first_eq = math.pow(gene, 2)
+                    #print(first_eq)
+
+                    # 2 * Pi * x
+                    second_eq = 2 * math.pi * gene
+                    #print(second_eq)
+
+                    # cos(2 * Pi * x)
+                    third_eq = math.cos(math.radians(second_eq))
+                    #print(third_eq)
+
+                    # -10 * cos(2 * Pi * x)
+                    fourth_eq = -10 * third_eq
+                    #print(fourth_eq)
+
+                    # x^2 + (-10) * cos(2 * Pi * x)
+                    fifth_eq = first_eq + fourth_eq
+                    #print(fifth_eq)
+
+                    # Each equation results
+                    equation_results.append(fifth_eq)
+
+                # Sum all the equation results
+                sigma_equation_sum = sum(equation_results)
+
+                starting_eq = 10 * len(self.chromosome)
+
+                self.fitness = starting_eq + sigma_equation_sum
 
             else:
                 print("Something went wrong in fitness function")

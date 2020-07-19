@@ -60,19 +60,6 @@ class Operations:
                 # Swap parts from chosen part
                 offspring = func.mutation_swap(choices, split, None)
 
-                # # Update fitness and ID
-                # for child in offspring:
-                #
-                #     print(child.id)
-                #     child = func.new_id(temp_parents + crossover)
-                #     print(child.id)
-                #
-                #     print(child.fitness)
-                #     child.update_fitness()
-                #     print(child.fitness)
-                #
-                # exit()
-
                 # Save offspring
                 for person in offspring:
                     crossover.append(person)
@@ -92,13 +79,76 @@ class Operations:
             crossover.append(person)
 
         func.print_population_section("parents", parents)
-        func.print_population_section("after mutation", crossover)
+        func.print_population_section("after Crossover", crossover)
 
         return crossover
 
 
-    def CR_TP(self):
-        print("TP", CR_settings)
+    #   Real Value Enconding slides: https://engineering.purdue.edu/~sudhoff/ee630/Lecture04.pdf
+
+    # Real Value Crossover - Blend Crossover
+    def CR_BC(self, CR_settings, parents):
+
+        crossover = []
+        chromosome_len = len(parents[0].chromosome)
+        temp_parents = copy.deepcopy(parents)
+
+        while len(temp_parents) >= 2:
+
+            # Pick two random parents - .sample does not get repeating values
+            choices = random.sample(temp_parents, k=2)
+
+            # Choose random number between 0 - 1 ... Mutation Rate
+            if random.uniform(0, 1) > CR_settings["rate"]:
+
+                # Need to choose a gene index from chromosome
+                index = random.randint(0, chromosome_len-1)
+
+                # get the real-value gene at that index for parents, therefore x1 and x2
+                x1 = choices[0].chromosome[index]
+                x2 = choices[1].chromosome[index]
+
+                # Use equation [ x1-α(x2-x1), x2+α(x2-x1)] to set a range
+                ALPHA = CR_settings["ALPHA"]
+
+                range1 = round(x1 + (-ALPHA) * (x2 - x1), 2)
+                range2 = round(x2 + (ALPHA) * (x2 - x1), 2)
+
+                # Verify that neither ranges are outside -5.12 <= x <= 5.12
+                range1 = func.restrict_ranges(range1, CR_settings["lower_range"], CR_settings["higher_range"])
+                range2 = func.restrict_ranges(range2, CR_settings["lower_range"], CR_settings["higher_range"])
+
+                # Select a number between ranges
+                num_in_range = round(random.uniform(range1, range2), 2)
+
+                # Change the value of before with new one
+                choices[0].chromosome[index] = num_in_range
+                choices[1].chromosome[index] = num_in_range
+
+                # Save offspring
+                for offspring in choices:
+                    crossover.append(offspring)
+
+            else:
+                # If didnt go through mutation process then add parents to next list
+                for person in choices:
+                    crossover.append(person)
+
+            # Remove from temp_parent
+            for person in choices:
+                temp_parents.remove(person)
+
+
+        # If there are any remaining parents in the parent list then add reagrdless to crossover
+        for person in temp_parents:
+            crossover.append(person)
+
+        func.print_population_section("parents", parents)
+        func.print_population_section("after crossover", crossover)
+
+        return crossover
+
+
 
 
 
@@ -142,8 +192,52 @@ class Operations:
 
         return mutation
 
-    def MU_SW(self, MU_settings):
-        print(SW)
+
+    #   Real-Value Mutation
+    def MU_ND(self, MU_settings, crossover):
+
+        mutation = []
+        chromosome_len = len(crossover[0].chromosome)
+        temp_crossover = copy.deepcopy(crossover)
+        range_difference = MU_settings["mutation_range"]
+
+        for person in temp_crossover:
+
+            func.print_divisor()
+
+            func.print_individual(person, "\nBefore mutation:")
+
+            # Mutation Rate
+            if random.uniform(0, 1) > MU_settings["rate"]:
+
+                # choose an index to flip value
+                index = random.randint(0, chromosome_len - 1)
+
+                print(f"Index to flip: {index}")
+
+                # Obtain value from x index
+                value = person.chromosome[index]
+
+                # mutate number with the range set in settings
+                mutated_value = round(random.uniform(value - range_difference, value + range_difference), 2)
+
+                # Verify mutated value is nto outside the range
+                new_value = func.restrict_ranges(mutated_value, MU_settings["lower_range"], MU_settings["higher_range"])
+
+                person.chromosome[index] = new_value
+
+                mutation.append(person)
+
+                func.print_individual(person, "\nAfter mutation:")
+
+            else:
+                print("Not going through mutation")
+                mutation.append(person)
+
+        func.print_population_section("crossover", crossover)
+        func.print_population_section("mutation", mutation)
+
+        return mutation
 
 
 

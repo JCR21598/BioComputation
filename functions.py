@@ -34,7 +34,8 @@ def find_PS_minimum(set):
     return temp_lowest
 
 
-
+def restrict_ranges(n, minn, maxn):
+    return max(min(maxn, n), minn)
 
 
 @dec.simple_divider

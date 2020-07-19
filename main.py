@@ -28,13 +28,14 @@ if __name__ == '__main__':
 
     GA_settings = {
         "general": {
-            "generation_num": 100,
-            "population_size": 30,
+            "run_count":1,
+            "generation_num": 80,
+            "population_size": 100,
             "find": "maximum",
             "available_finds": ["maximum", "minimum"]
         },
         "FI_settings": {
-            "function_type": 1,
+            "function_type": 2,
             "available_fitness_functions": [0,1,2,3],
 
             "function_1":{
@@ -47,14 +48,17 @@ if __name__ == '__main__':
             },
 
             "function_3": {
-                "chromosome_size": 8,   # n value
+
+                # FUnction sets n as == 10 or 20 ( But Lecturer says that belives that other values can be used)
+
+                "chromosome_size": 5,   # this is the n valuf of the function
             },
 
         },
         "PS_settings": {
-            "available_methods": ["TO", "RW"],
+            "available_methods": ["TO"],
             "method": "TO",
-            "quantity_of_parents": 25,
+            "quantity_of_parents": 20,
 
             "problem_type": None,
 
@@ -63,15 +67,26 @@ if __name__ == '__main__':
 
         },
         "CR_settings": {
-            "rate": 0.5,
-            "available_methods": ["OP", "TP"],
-            "method": "OP",
-            "quantity_crossover_attempts": 5,
+            "rate": 0.1,
+            "available_methods": ["OP", "BC"],
+            "method": "BC",
+
+            # Real-Value Encoding Settings
+            "lower_range" : -5.12,
+            "higher_range" : 5.12,
+            "ALPHA": 0.25,
         },
         "MU_settings": {
             "rate": 0.5,
-            "available_methods": ["BF", "SW"],
-            "method": "BF",
+            "available_methods": ["BF", "ND"],
+            "method": "ND",
+
+            # Real-Value Encoding Settings
+            "mutation_range": 0.5,    # ex: x= 3.12 => mutation will be within 2.62 - 3.62
+
+            "lower_range": None,
+            "higher_range": None,
+
         },
         "SS_settings": {
             "available_methods": ["FB"],
@@ -80,7 +95,7 @@ if __name__ == '__main__':
             "problem_type": None,
 
             # Fitness based settings
-            "FB_suvivor_quantity" : 15,
+            "FB_suvivor_quantity" : 10,
         }
     }
 
@@ -88,6 +103,8 @@ if __name__ == '__main__':
     GA_settings["PS_settings"]["problem_type"] = GA_settings["general"]["find"]
     GA_settings["SS_settings"]["problem_type"] = GA_settings["general"]["find"]
 
+    GA_settings["MU_settings"]["lower_range"] = GA_settings["CR_settings"]["lower_range"]
+    GA_settings["MU_settings"]["higher_range"] = GA_settings["CR_settings"]["higher_range"]
 
     ###     Validation of data before sent      ###
 
@@ -107,4 +124,5 @@ if __name__ == '__main__':
     genetic_algorithm = GA(GA_settings)
 
     # Execute the Genetic Algorithm
-    genetic_algorithm.execute()
+    for x in range(GA_settings["general"]["run_count"]):
+        genetic_algorithm.execute()

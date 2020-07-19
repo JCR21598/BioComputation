@@ -29,23 +29,38 @@ class Population:
 
     def random_populate(self, settings):
 
+
         id = 0
 
         population_size = settings["general"]["population_size"]
         which_function = settings["FI_settings"]["function_type"]
-
         chromosome_size = settings["FI_settings"][f"function_{which_function}"]["chromosome_size"]
 
         for person in range(population_size):
             chromosome = []
 
-            # Random x amount of Chromosome
-            chromosome = random.choices([0, 1], k=chromosome_size)
+            # Depending on function there are different encodings
+            if which_function in [1,2]:
+
+                #   Binary Encoding
+                chromosome = random.choices([0, 1], k=chromosome_size)
+
+            elif which_function in [3]:
+
+                #   Real Number Encoding
+                for x in range(chromosome_size):
+                    gene = round(random.uniform(settings["CR_settings"]["lower_range"], settings["CR_settings"]["higher_range"]), 2)
+                    chromosome.append(gene)
+
+            else:
+                print("Error: at random_populate method in Population file")
+                exit()
 
             # Create Individual and add to list
             self.individuals.append(Individual(id,chromosome))
 
             id += 1
+
 
 
  ###    Genetic Algorithm Operation Calls   ###

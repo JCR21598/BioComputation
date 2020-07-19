@@ -53,9 +53,6 @@ class GA:
             func.print_population_section(f" Generation {gen}", population.individuals)
 
 
-            #animation = FuncAnimation(plt.gcf(), func.animate(surivor_selection, gen), interval=500)
-
-
         #   Plotting and Visualising Data
 
         x = list(range(self.settings["general"]["generation_num"]))
@@ -79,8 +76,6 @@ class GA:
 
         # Plotting
 
-
-
         y_highest = highest_fitness_list
         y_average = average_fitness_list
         y_lowest = lowest_fitness_list
@@ -96,7 +91,3 @@ class GA:
         plt.ylabel = "Fitness"
 
         plt.show()
-
-
-        # Wipe out the file
-        open("result.txt", "w").close()
