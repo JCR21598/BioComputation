@@ -31,7 +31,10 @@ class Individual:
                     exit()
 
                 #   Domain
-                x = sum([2 ** i for i, gene in enumerate(self.chromosome) if gene == 1])
+                x_domain = sum([2 ** i for i, gene in enumerate(self.chromosome) if gene == 1])
+
+                # fitness function
+                x = x_domain ** 2
 
                 #   Fitness Function
                 self.fitness = x

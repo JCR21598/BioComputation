@@ -1,7 +1,5 @@
 
 import copy
-import numpy as np
-from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 import pprint
 
@@ -80,14 +78,4 @@ class GA:
         y_average = average_fitness_list
         y_lowest = lowest_fitness_list
 
-        plt.plot(x, y_highest, label="Highest Fitness")
-        plt.plot(x, y_average, label="Average Fitness")
-        plt.plot(x, y_lowest, label="Lowest Fitness")
-
-        plt.legend()
-
-        plt.title = "Average Fitness Over Generations"
-        plt.xlabel = "Generation"
-        plt.ylabel = "Fitness"
-
-        plt.show()
+        return x, y_highest, y_average, y_lowest

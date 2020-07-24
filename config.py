@@ -6,6 +6,8 @@
 #
 
 
+import matplotlib.pyplot as plt
+
 from GA import GA
 
 '''
@@ -28,14 +30,14 @@ if __name__ == '__main__':
 
     GA_settings = {
         "general": {
-            "run_count":1,
-            "generation_num": 80,
+            "run_count": 10,
+            "generation_num": 120,
             "population_size": 100,
-            "find": "maximum",
+            "find": "minimum",
             "available_finds": ["maximum", "minimum"]
         },
         "FI_settings": {
-            "function_type": 2,
+            "function_type": 3,
             "available_fitness_functions": [0,1,2,3],
 
             "function_1":{
@@ -51,14 +53,14 @@ if __name__ == '__main__':
 
                 # FUnction sets n as == 10 or 20 ( But Lecturer says that belives that other values can be used)
 
-                "chromosome_size": 5,   # this is the n valuf of the function
+                "chromosome_size": 10,   # this is the n valuf of the function
             },
 
         },
         "PS_settings": {
             "available_methods": ["TO"],
             "method": "TO",
-            "quantity_of_parents": 20,
+            "quantity_of_parents": 25,
 
             "problem_type": None,
 
@@ -67,7 +69,7 @@ if __name__ == '__main__':
 
         },
         "CR_settings": {
-            "rate": 0.1,
+            "rate": 0.5,
             "available_methods": ["OP", "BC"],
             "method": "BC",
 
@@ -77,7 +79,7 @@ if __name__ == '__main__':
             "ALPHA": 0.25,
         },
         "MU_settings": {
-            "rate": 0.5,
+            "rate": 0.15,
             "available_methods": ["BF", "ND"],
             "method": "ND",
 
@@ -95,7 +97,7 @@ if __name__ == '__main__':
             "problem_type": None,
 
             # Fitness based settings
-            "FB_suvivor_quantity" : 10,
+            "FB_suvivor_quantity" : 15,
         }
     }
 
@@ -123,6 +125,51 @@ if __name__ == '__main__':
     # Instantiate the GA with the settings set by user
     genetic_algorithm = GA(GA_settings)
 
+    x = []
+    y = []
+
     # Execute the Genetic Algorithm
-    for x in range(GA_settings["general"]["run_count"]):
-        genetic_algorithm.execute()
+    for count in range(GA_settings["general"]["run_count"]):
+
+        x, y_highest, y_average, y_lowest = genetic_algorithm.execute()
+
+
+
+
+        highest_plot = plt.figure(0)
+        plt.plot(x, y_highest, label="Test {}".format(count + 1))
+
+        plt.legend()
+
+        plt.title("Highest Fitness per generation", fontsize=15)
+        plt.xlabel("Generation", fontsize=13)
+        plt.ylabel("Fitness", fontsize=13)
+
+
+
+
+        average_plot = plt.figure(1)
+        plt.plot(x, y_average, label="Test {}".format(count + 1))
+
+        plt.legend()
+
+        plt.title("Average Fitness per generation", fontsize=15)
+        plt.xlabel("Generation", fontsize=13)
+        plt.ylabel("Fitness", fontsize=13)
+
+
+
+
+        lowest_plot = plt.figure(2)
+        plt.plot(x, y_lowest, label="Test {}".format(count + 1))
+
+        plt.legend()
+
+        plt.title("Lowest Fitness per generation", fontsize=15)
+        plt.xlabel("Generation", fontsize=13)
+        plt.ylabel("Fitness", fontsize=13)
+
+
+
+
+    plt.show()
